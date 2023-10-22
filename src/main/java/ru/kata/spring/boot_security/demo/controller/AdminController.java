@@ -50,13 +50,11 @@ public class AdminController {
     @PostMapping("/insert")
     public String insertUser(@Valid @ModelAttribute("user") User user, BindingResult bd) {
 
-
         userValidator.validate(user, bd);
         if (bd.hasErrors()) {
             return "create_user";
         }
         userService.registerUser(user);
-
 
         return "redirect:/admin";
     }
@@ -68,15 +66,12 @@ public class AdminController {
         List<Role> roles = roleDao.findAll();
         model.addAttribute("user", userService.getUserById(userId));
         model.addAttribute("roles", roles);
-        System.out.println(userService.getUserById(userId));
         return "update_user";
     }
 
     @PostMapping("/update")
     public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bd,
                              @RequestParam("action") String action) {
-
-        System.out.println(user);
 
         if (action.equals("Update")) {
             if (bd.hasErrors()) {
