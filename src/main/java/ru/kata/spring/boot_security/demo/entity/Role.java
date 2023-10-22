@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Pattern;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +17,6 @@ public class Role implements GrantedAuthority {
     @Id
     private Long id;
 
-    @Pattern(regexp = "ROLE_(USER | ADMIN)", message = "Incorrect name of the role")
     private String role;
     @Transient
     @ManyToMany(mappedBy = "roles")

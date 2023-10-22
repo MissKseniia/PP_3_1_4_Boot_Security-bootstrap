@@ -38,7 +38,6 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    @Size(min = 1, max = 2, message = "Role: 1-2")
     private Set<Role> roles = new HashSet<>();
     @NotBlank(message = "Invalid argument for firstname")
     private String firstname;
