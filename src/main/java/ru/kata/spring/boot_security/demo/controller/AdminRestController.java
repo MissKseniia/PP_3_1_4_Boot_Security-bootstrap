@@ -24,13 +24,13 @@ public class AdminRestController {
     @GetMapping(value = "/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public User findUserById(@PathVariable("id") Long id) {
 
-       return userService.getUserById(id);
+        return userService.getUserById(id);
 
     }
 
     @PostMapping("/update")
     public User update(@RequestBody User user) {
-        System.out.println(user);
+
         return userService.save(user);
     }
 

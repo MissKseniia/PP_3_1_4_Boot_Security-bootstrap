@@ -1,19 +1,20 @@
+$('document').ready(function () {
+    $('.table .deleteButton').on('click', function (event) {
+        event.preventDefault();
 
-$("#deleteUserModal").on("show.bs.modal", function(e) {
-    let button = $(e.relatedTarget)
-    let href = button.attr('href')
-    let id
+        let href = $(this).attr('href')
 
-    $.get(href, function (userForEdit, status) {
+        $.get(href, function (userForDelete, status) {
 
-        id = userForEdit.id;
-        $("#deleteId").val(userForEdit.id);
-        $("#deleteFirstname").val(userForEdit.firstname);
-        $("#deleteAge").val(userForEdit.age);
-        $("#deleteEmail").val(userForEdit.email);
-        $("#deleteLastname").val(userForEdit.lastname);
+            $(".deleteForm #deleteId").val(userForDelete.id);
+            $(".deleteForm #deleteFirstname").val(userForDelete.firstname);
+            $(".deleteForm #deleteAge").val(userForDelete.age);
+            $(".deleteForm #deleteEmail").val(userForDelete.email);
+            $(".deleteForm #deleteLastname").val(userForDelete.lastname);
 
+            $("#deleteUserModal #deleteModalButton").attr('href', '/admin/remove/' + userForDelete.id);
+        });
+
+        $('#deleteUserModal').modal();
     });
-
-    $("#deleteModalButton").attr('onclick', window.location.href+'/admin/remove/'+ id);
 });
