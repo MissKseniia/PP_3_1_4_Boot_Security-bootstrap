@@ -13,7 +13,7 @@ import ru.kata.spring.boot_security.demo.validator.UserValidator;
 
 import javax.validation.Valid;
 
-@RequestMapping("/auth")
+@RequestMapping("/")
 @Controller
 public class AuthenticationController {
 
@@ -26,12 +26,17 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @GetMapping("/registration")
+    @GetMapping
+    public String loginPage(@ModelAttribute("user") User user) {
+        return "login";
+    }
+
+    @GetMapping("registration")
     public String registration(@ModelAttribute("user") User user) {
         return "registration";
     }
 
-    @PostMapping("/registration")
+    @PostMapping("registration")
     public String registerNewUser(@Valid @ModelAttribute("user") User user, BindingResult bd) {
 
         userValidator.validate(user, bd);
@@ -40,6 +45,6 @@ public class AuthenticationController {
         }
 
         userService.registerUser(user);
-        return "redirect:/login";
+        return "redirect:/";
     }
 }

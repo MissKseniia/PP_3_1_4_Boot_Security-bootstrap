@@ -1,36 +1,96 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
 </head>
 <body>
-<form th:object="${user}">
 
-    <h1 th:text="${user.firstname}"></h1>
-    <h2>Your personal information:</h2><br>
-    <table style="border: thin black;background-color: goldenrod">
-        <tr>
-            <th> Name</th>
-            <th> Lastname</th>
-            <th> Age</th>
-            <th> Email</th>
-        </tr>
-        <tr>
-            <td th:text="${user.firstname}"></td>
-            <td th:text="${user.lastname}"></td>
-            <td th:text="${user.age}"></td>
-            <td th:text="${user.email}"></td>
-        </tr>
-    </table>
-    <br><br>
-    <!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.getToken()}"/>-->
-</form>
-<form method="post" action="/logout">
+<div class="container-fluid" style="background-color: black">
+    <div class="container">
+        <div class="row justify-content-md-between align-items-center">
+            <div class="col-lg-auto" style="color: whitesmoke">
+                <div class="row align-items-center " th:object="${user}">
+                    <div class="col-lg-auto" style="font-weight: bold; padding-right: 0" th:text="${user.email}"></div>
+                    <div class="col-lg-auto" style="padding-right: 0">with roles:</div>
+                    <div class="col-lg-auto" style="padding-right: 0" th:text="${user.roles}"></div>
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <form th:method="post" th:action="@{/logout}">
+                    <input type="submit" value="Logout" style="background-color: black; color: gray; border: black">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.getToken()}"/>
-    <input type="submit" value="logout">
+<div class="container-fluid" style="padding: 0">
+    <div class="row">
 
-</form>
+        <!--      (Completed) Navigation bar: user-->
+        <div class="col-lg-2" style="background-color: white; padding: 0 0">
+            <ul class="nav nav-pills flex-column" id="pills-tab" role="tablist" style="padding-top: 10px">
+                <li class="nav-item" style="text-align: left; padding-left: 10px">
+                    <a class="nav-link active" id="pills-user_panel-tab" data-toggle="tab" role="tab"
+                       href="#pills-user_panel">User</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-10 tab-content" id="pills-tabContent" style="background-color: whitesmoke">
+            <div class="tab-pane fade show active" id="pills-user_panel" role="tabpanel" aria-labelledby="pills-user_panel-tab">
+                <div class="col-lg-10" style="background-color: whitesmoke">
+                    <div class="container" style="padding-top: 10px; padding-left: 0">
+                        <h1>User information-page</h1>
+                        <div class="container" style="padding-bottom: 5px; margin-top: 10px; background-color: whitesmoke; border: lightgrey thin solid">
+                            <h5 style="padding-top: 10px">About user</h5>
+                        </div>
+                        <div class="container" style="align-items: center; background-color: white; padding-top: 20px; padding-bottom: 20px">
+
+                            <table class="table table-striped" style="padding: 10px; border-top: lightgrey solid thin">
+                                <thead>
+                                <tr>
+                                    <th scope="col"> ID</th>
+                                    <th scope="col"> First Name</th>
+                                    <th scope="col"> Last Name</th>
+                                    <th scope="col"> Age</th>
+                                    <th scope="col"> Email</th>
+                                    <th scope="col"> Role</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:object="${user}">
+                                    <td th:text="${user.id}"></td>
+                                    <td th:text="${user.firstname}"></td>
+                                    <td th:text="${user.lastname}"></td>
+                                    <td th:text="${user.age}"></td>
+                                    <td th:text="${user.email}"></td>
+                                    <td th:text="${user.roles}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

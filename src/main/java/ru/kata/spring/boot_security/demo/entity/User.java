@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private String firstname;
     @NotBlank(message = "Invalid argument for lastname")
     private String lastname;
-    @NotNull(message = "Invalid argument for age")
+
     @Range(min = 1, max = 100, message = "Invalid argument for age")
     private Byte age;
 

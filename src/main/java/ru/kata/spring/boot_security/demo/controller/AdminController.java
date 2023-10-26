@@ -1,14 +1,20 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleDao;
@@ -32,60 +38,53 @@ public class AdminController {
         this.roleDao = roleDao;
     }
 
-    @GetMapping
-    public String usersList(Model model) {
+    @GetMapping()
+    public String adminPage(@ModelAttribute("user") User user, ModelMap model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User admin = (User) authentication.getPrincipal();
+        List<Role> roles = roleDao.findAll();
+        model.addAttribute("roles", roles);
+        model.addAttribute("admin", admin);
         model.addAttribute("allUsers", userService.getUsers());
+        model.addAttribute("userEdit", new User());
         return "admin";
     }
 
-    @GetMapping("/create")
-    public String createUser(@ModelAttribute("user") User user, ModelMap model) {
-
-        List<Role> roles = roleDao.findAll();
-        model.addAttribute("roles", roles);
-
-        return "create_user";
-    }
-
     @PostMapping("/insert")
-    public String insertUser(@Valid @ModelAttribute("user") User user, BindingResult bd) {
+    public String insertUser(@Valid @ModelAttribute User user, BindingResult bd) {
 
-        userValidator.validate(user, bd);
         if (bd.hasErrors()) {
-            return "create_user";
+            return "admin";
         }
+        userValidator.validate(user, bd);
         userService.registerUser(user);
-
         return "redirect:/admin";
     }
 
-    @GetMapping("/update")
-    public String updateUser(@RequestParam("userId") Long userId,
-                             ModelMap model) {
+    @RequestMapping("/findUser")
+    @ResponseBody
+    public User findUser(Long id) {
 
-        List<Role> roles = roleDao.findAll();
-        model.addAttribute("user", userService.getUserById(userId));
-        model.addAttribute("roles", roles);
-        return "update_user";
+        System.out.println(userService.getUserById(id));
+        return userService.getUserById(id);
     }
 
     @PostMapping("/update")
-    public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bd,
-                             @RequestParam("action") String action) {
+    public String updateUser(@ModelAttribute User user) {
 
-        if (action.equals("Update")) {
-            if (bd.hasErrors()) {
-                return "update_user";
-            }
-            userService.updateUser(user);
-        }
+//        if (bd.hasErrors()) {
+//            return "update_user";
+//        }
+        System.out.println(user);
+        userService.updateUser(user);
+
         return "redirect:/admin";
     }
 
-    @PostMapping("/remove")
-    public String deleteUser(@RequestParam Long userId) {
+    @RequestMapping(value = "/remove/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String deleteUser(@PathVariable Long id) {
 
-        userService.deleteUserById(userId);
+        userService.deleteUserById(id);
         return "redirect:/admin";
     }
 }

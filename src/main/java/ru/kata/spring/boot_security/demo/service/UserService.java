@@ -19,4 +19,6 @@ public interface UserService {
     User getUserById(Long id);
 
     void updateUser(User user);
+
+    User save(User user);
 }

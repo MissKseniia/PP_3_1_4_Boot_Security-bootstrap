@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userDao.getById(id);
+        return userDao.findById(id).get();
     }
 
     @Transactional
@@ -66,5 +66,13 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.save(user);
+    }
+
+    @Override
+    public User save(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        User oldUser = userDao.findById(user.getId()).get();
+
+        return userDao.save(user);
     }
 }
