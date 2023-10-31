@@ -1,12 +1,12 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.repository.UserDao;
+import ru.kata.spring.boot_security.demo.entities.Role;
+import ru.kata.spring.boot_security.demo.entities.User;
+import ru.kata.spring.boot_security.demo.repositories.UserDao;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,11 +29,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void registerUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+
         if (user.getRoles().isEmpty()) {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
         }
-        userDao.save(user);
+        save(user);
     }
 
     @Transactional
@@ -64,15 +64,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        userDao.save(user);
+        save(user);
     }
 
     @Override
     public User save(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        User oldUser = userDao.findById(user.getId()).get();
-
         return userDao.save(user);
     }
 }

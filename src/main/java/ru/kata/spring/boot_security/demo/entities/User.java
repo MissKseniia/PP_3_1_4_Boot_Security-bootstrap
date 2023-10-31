@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.entity;
+package ru.kata.spring.boot_security.demo.entities;
 
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -38,13 +38,15 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
+    @Size(min = 1, message = "Choose a role")
     private Set<Role> roles = new HashSet<>();
     @NotBlank(message = "Invalid argument for firstname")
     private String firstname;
     @NotBlank(message = "Invalid argument for lastname")
     private String lastname;
 
-    @Range(min = 1, max = 100, message = "Invalid argument for age")
+    @NotNull(message = "Invalid argument for lastname")
+    @Range(min = 1, max = 100, message = "Must be from 1 to 100")
     private Byte age;
 
     @Pattern(regexp = "\\w+@[a-z]{4,10}\\.(com|ru)", message = "Invalid argument for email")
@@ -84,7 +86,7 @@ public class User implements UserDetails {
     }
 
     public void setFirstname(String firstname) {
-        this.firstname = firstname;
+        this.firstname = firstname.trim();
     }
 
     public String getLastname() {
@@ -92,7 +94,7 @@ public class User implements UserDetails {
     }
 
     public void setLastname(String lastname) {
-        this.lastname = lastname;
+        this.lastname = lastname.trim();
     }
 
     public Byte getAge() {
@@ -108,12 +110,12 @@ public class User implements UserDetails {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.trim();
     }
 
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password.trim();
     }
 
     //From UserDetails

@@ -1,11 +1,11 @@
-package ru.kata.spring.boot_security.demo.validator;
+package ru.kata.spring.boot_security.demo.validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.entities.User;
+import ru.kata.spring.boot_security.demo.services.UserService;
 
 @Component
 public class UserValidator implements Validator {
@@ -26,6 +26,7 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors) {
 
         if (userService.userExists((User) target)) {
+
             errors.rejectValue("email", "", "User with this email has already been signed up");
         }
 

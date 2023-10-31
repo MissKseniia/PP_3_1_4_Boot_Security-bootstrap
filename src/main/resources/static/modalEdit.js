@@ -1,7 +1,7 @@
 $('document').ready(function () {
+
     $('.table .editingButton').on('click', function (event) {
         event.preventDefault();
-
         let href = $(this).attr('href')
 
         $.get(href, function (userForEdit, status) {
@@ -13,5 +13,6 @@ $('document').ready(function () {
             $(".editForm #editLastname").val(userForEdit.lastname);
         });
         $('.editForm #editUserModal').modal();
+
     });
 });
