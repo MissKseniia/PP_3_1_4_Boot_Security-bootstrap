@@ -8,16 +8,16 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 </head>
-<body>
+<body onload="loadUserData(); loadIntoTable()">
 <!--HEADER-->
 <div class="container-fluid" style="background-color: black">
     <div class="container">
         <div class="row justify-content-md-between align-items-center">
             <div class="col-lg-auto" style="color: whitesmoke">
-                <div class="row align-items-center " th:object="${admin}">
-                    <div class="col-lg-auto" style="font-weight: bold; padding-right: 0" th:text="${admin.email}"></div>
+                <div class="row align-items-center">
+                    <div id="userEmailData" class="col-lg-auto" style="font-weight: bold; padding-right: 0"></div>
                     <div class="col-lg-auto" style="padding-right: 0">with roles:</div>
-                    <div class="col-lg-auto" style="padding-right: 0" th:text="${admin.roles}"></div>
+                    <div id="userRolesData" class="col-lg-auto" style="padding-right: 0"></div>
                 </div>
             </div>
             <div class="col-lg-1">
@@ -70,7 +70,7 @@
                          style="border: lightgrey solid thin; background-color: white">
 
                         <!-- USERS TABLE-->
-                        <div class="tab-pane fade show active" id="users_table" role="tabpanel"
+                        <div  class="tab-pane fade show active" id="users_table" role="tabpanel"
                              aria-labelledby="users_table-tab">
                             <div class="container"
                                  style="padding-bottom: 5px; background-color: whitesmoke; border-bottom: lightgrey thin solid">
@@ -79,6 +79,7 @@
                             <div class="container" style="align-items: center; padding-top: 20px">
 
                                 <table class="table table-striped"
+                                       id="usersTable"
                                        style="padding: 10px; border-top: lightgrey solid thin">
                                     <thead>
                                     <tr>
@@ -93,38 +94,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user: ${allUsers}">
-                                        <th scope="row" th:text="${user.id}"></th>
-                                        <td th:text="${user.firstname}"></td>
-                                        <td th:text="${user.lastname}"></td>
-                                        <td th:text="${user.age}"></td>
-                                        <td th:text="${user.email}"></td>
-                                        <td th:text="${user.roles}"></td>
-                                        <td>
 
-                                            <!-- EDIT Button trigger modal  -->
-
-                                            <a
-                                                    id="editUserButton"
-                                                    class="btn btn-info editingButton"
-                                                    th:href="@{/admin/findUser/(id=${user.id})}"
-                                            >Edit
-                                            </a>
-
-                                        </td>
-
-                                        <td>
-
-                                            <!-- DELETE Button trigger modal -->
-                                            <a
-                                                    id="deleteUserButton"
-                                                    class="btn btn-danger deleteButton"
-                                                    th:href="@{/admin/findUser/(id=${user.id})}"
-                                            >Delete
-                                            </a>
-
-                                        </td>
-                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -133,7 +103,7 @@
                         <!-- EDIT Modal -->
                         <div class="editForm">
                             <form class="needs-validation" novalidate
-                                  id="editModalForm" th:method="POST" th:action="@{/admin/update}">
+                                  id="editModalForm">
 
                                 <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog"
                                      aria-labelledby="editUserModal_label" aria-hidden="true">
@@ -243,8 +213,9 @@
                                                     <select multiple class="editInput form-control" size="2"
                                                             name="roles"
                                                             id="editRoles" required>
-                                                        <option th:each="role : ${roles}" th:value="${role.id}"
-                                                                th:text="${role.role}"></option>
+                                                        <option  value="1" >ADMIN</option>
+                                                        <option value="2" >USER</option>
+
                                                     </select>
                                                     <div class="invalid-feedback">
                                                         Please choose a role / roles.
@@ -257,9 +228,8 @@
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                                     Close
                                                 </button>
-                                                <input type="hidden" th:name="${_csrf.parameterName}"
-                                                       th:value="${_csrf.getToken()}"/>
-                                                <button id="saveModalButton" type="submit" class="btn btn-primary">
+                                                <button id="saveModalButton" type="submit" class="btn btn-primary"
+                                                        >
                                                     Edit
                                                 </button>
                                             </div>
@@ -272,7 +242,7 @@
 
                         <!-- DELETE Modal -->
                         <div class="deleteForm">
-                            <form id="deleteModalForm" th:method="POST" th:action="@{/admin/remove/}">
+                            <form id="deleteModalForm">
                                 <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog"
                                      aria-labelledby="editUserModal_label" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -364,8 +334,8 @@
                                                     <label style="font-weight: bold" for="deleteRoles">Roles</label>
                                                     <select multiple class="form-control" size="2" name="roles"
                                                             id="deleteRoles" disabled>
-                                                        <option th:each="role : ${roles}" th:value="${role.id}"
-                                                                th:text="${role.role}"></option>
+                                                        <option  value="1" >ADMIN</option>
+                                                        <option value="2" >USER</option>
                                                     </select>
 
                                                 </div>
@@ -374,9 +344,8 @@
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                                     Close
                                                 </button>
-                                                <input type="hidden" th:name="${_csrf.parameterName}"
-                                                       th:value="${_csrf.getToken()}"/>
-                                                <a id="deleteModalButton" href="" class="btn btn-danger">Delete</a>
+                                                <button id="deleteModalButton" type="submit" class="btn btn-danger">
+                                                    Delete</button>
                                             </div>
 
                                         </div>
@@ -386,129 +355,129 @@
                         </div>
 
 
-                        <!-- NEW USER -->
-                        <!--     Проблема с серверной валидацией   -->
-                        <div class="tab-pane fade" id="new_user" role="tabpanel" aria-labelledby="new_user-tab">
+<!--                         NEW USER -->
 
-                            <div class="container">
-                                <form id="newUserForm" class="needs-validation" novalidate
-                                      th:method="post" th:action="@{/admin/insert}" th:object="${user}">
+<!--                        <div class="tab-pane fade" id="new_user" role="tabpanel" aria-labelledby="new_user-tab">-->
 
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 40px">
+<!--                            <div class="container">-->
+<!--                                <form id="newUserForm" class="needs-validation" novalidate-->
+<!--                                      th:method="POST" th:action="@{/admin/api/users}" th:object="${user}">-->
 
-
-                                        <label for="firstname" style="font-weight: bold">First name</label>
-                                        <input type="text" class="form-control" id="firstname"
-                                               th:field="*{firstname}"
-                                               style="margin-bottom: 15px" required>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid firstname.
-                                        </div>
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 40px">-->
 
 
-                                    </div>
-
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 20px">
-
-
-                                        <label for="lastname" style="font-weight: bold">Last name</label>
-                                        <input type="text" class="form-control"
-                                               th:field="*{lastname}" id="lastname"
-                                               style="margin-bottom: 15px" required>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid lastname.
-                                        </div>
-
-                                    </div>
-
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 20px">
-
-                                        <label for="age" style="font-weight: bold">Age</label>
-                                        <input type="number" class="form-control"
-                                               th:field="*{age}" id="age"
-                                               style="margin-bottom: 15px" required>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid age (1-100).
-                                        </div>
-
-                                    </div>
-
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 20px">
+<!--                                        <label for="firstname" style="font-weight: bold">First name</label>-->
+<!--                                        <input type="text" class="form-control" id="firstname"-->
+<!--                                               th:field="*{firstname}"-->
+<!--                                               style="margin-bottom: 15px" required>-->
+<!--                                        <div class="invalid-feedback">-->
+<!--                                            Please provide a valid firstname.-->
+<!--                                        </div>-->
 
 
-                                        <div class="alert alert danger" th:if="${#fields.hasErrors('email')}"
-                                             th:errors="*{email}"></div>
-                                        <label for="email" style="font-weight: bold">Email</label>
-                                        <input type="email" class="form-control"
-                                               th:field="*{email}" id="email"
-                                               aria-describedby="emailHelpInline" required>
-                                        <small id="emailHelpInline" class="text-muted">
-                                            Must be format like name@mail.ru(com)
-                                        </small><br>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid email (example@mail.com).
-                                        </div>
+<!--                                    </div>-->
 
-                                    </div>
-
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 20px">
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 20px">-->
 
 
-                                        <label for="password"
-                                               style="font-weight: bold; margin-top: 15px">Password</label>
-                                        <input type="password" class="form-control"
-                                               th:field="*{password}" id="password"
-                                               aria-describedby="passwordHelpInline" required>
-                                        <small id="passwordHelpInline" class="text-muted">
-                                            Must be more than 5 characters long
-                                        </small><br>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid password (minimum 5 digits).
-                                        </div>
+<!--                                        <label for="lastname" style="font-weight: bold">Last name</label>-->
+<!--                                        <input type="text" class="form-control"-->
+<!--                                               th:field="*{lastname}" id="lastname"-->
+<!--                                               style="margin-bottom: 15px" required>-->
+<!--                                        <div class="invalid-feedback">-->
+<!--                                            Please provide a valid lastname.-->
+<!--                                        </div>-->
 
-                                    </div>
+<!--                                    </div>-->
 
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 20px">
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 20px">-->
+
+<!--                                        <label for="age" style="font-weight: bold">Age</label>-->
+<!--                                        <input type="number" class="form-control"-->
+<!--                                               th:field="*{age}" id="age"-->
+<!--                                               style="margin-bottom: 15px" required>-->
+<!--                                        <div class="invalid-feedback">-->
+<!--                                            Please provide a valid age (1-100).-->
+<!--                                        </div>-->
+
+<!--                                    </div>-->
+
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 20px">-->
 
 
-                                        <label for="roles" style="font-weight: bold; margin-top: 15px">Role</label>
-                                        <select multiple class="form-control" size="2" name="roles" id="roles"
-                                                th:field="*{roles}" required>
-                                            <option th:each="role : ${roles}" th:value="${role.id}"
-                                                    th:text="${role.role}"></option>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Please choose a role / roles.
-                                        </div>
+<!--                                        <div class="alert alert danger" th:if="${#fields.hasErrors('email')}"-->
+<!--                                             th:errors="*{email}"></div>-->
+<!--                                        <label for="email" style="font-weight: bold">Email</label>-->
+<!--                                        <input type="email" class="form-control"-->
+<!--                                               th:field="*{email}" id="email"-->
+<!--                                               aria-describedby="emailHelpInline" required>-->
+<!--                                        <small id="emailHelpInline" class="text-muted">-->
+<!--                                            Must be format like name@mail.ru(com)-->
+<!--                                        </small><br>-->
+<!--                                        <div class="invalid-feedback">-->
+<!--                                            Please provide a valid email (example@mail.com).-->
+<!--                                        </div>-->
 
-                                    </div>
+<!--                                    </div>-->
 
-                                    <div class="form-group"
-                                         style="align-items: center; text-align: center; width: 50%;
-                                         margin-left: 25%; margin-top: 50px">
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 20px">-->
 
-                                        <input type="hidden" th:name="${_csrf.parameterName}"
-                                               th:value="${_csrf.getToken()}"/>
-                                        <button type="submit" class="btn btn-success">Add new user
-                                        </button>
 
-                                    </div>
+<!--                                        <label for="password"-->
+<!--                                               style="font-weight: bold; margin-top: 15px">Password</label>-->
+<!--                                        <input type="password" class="form-control"-->
+<!--                                               th:field="*{password}" id="password"-->
+<!--                                               aria-describedby="passwordHelpInline" required>-->
+<!--                                        <small id="passwordHelpInline" class="text-muted">-->
+<!--                                            Must be more than 5 characters long-->
+<!--                                        </small><br>-->
+<!--                                        <div class="invalid-feedback">-->
+<!--                                            Please provide a valid password (minimum 5 digits).-->
+<!--                                        </div>-->
 
-                                </form>
-                            </div>
-                        </div>
+<!--                                    </div>-->
+
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 20px">-->
+
+
+<!--                                        <label for="roles" style="font-weight: bold; margin-top: 15px">Role</label>-->
+<!--                                        <select multiple class="form-control" size="2" name="roles" id="roles"-->
+<!--                                                th:field="*{roles}" required>-->
+<!--                                            <option th:each="role : ${roles}" th:value="${role.id}"-->
+<!--                                                    th:text="${role.role}"></option>-->
+<!--                                        </select>-->
+<!--                                        <div class="invalid-feedback">-->
+<!--                                            Please choose a role / roles.-->
+<!--                                        </div>-->
+
+<!--                                    </div>-->
+
+<!--                                    <div class="form-group"-->
+<!--                                         style="align-items: center; text-align: center; width: 50%;-->
+<!--                                         margin-left: 25%; margin-top: 50px">-->
+
+<!--                                        <input type="hidden" th:name="${_csrf.parameterName}"-->
+<!--                                               th:value="${_csrf.getToken()}"/>-->
+<!--                                        <button type="submit" class="btn btn-success">Add new user-->
+<!--                                        </button>-->
+
+<!--                                    </div>-->
+
+<!--                                </form>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                     </div>
                 </div>
@@ -526,7 +495,7 @@
                         <div class="container"
                              style="align-items: center; background-color: white; padding-top: 20px; padding-bottom: 20px">
 
-                            <table class="table table-striped" style="padding: 10px; border-top: lightgrey solid thin">
+                            <table id="userInfoTable" class="table table-striped" style="padding: 10px; border-top: lightgrey solid thin">
                                 <thead>
                                 <tr>
                                     <th scope="col"> ID</th>
@@ -538,14 +507,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:object="${admin}">
-                                    <td th:text="${admin.id}"></td>
-                                    <td th:text="${admin.firstname}"></td>
-                                    <td th:text="${admin.lastname}"></td>
-                                    <td th:text="${admin.age}"></td>
-                                    <td th:text="${admin.email}"></td>
-                                    <td th:text="${admin.roles}"></td>
-                                </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -568,6 +530,11 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
+<!--              LOAD USER DATA SCRIPT                          -->
+<script type="text/javascript" defer th:src="@{/loadUserInfo.js}"></script>
+
+<!--              LOAD USERS' TABLE SCRIPT                          -->
+<script type="text/javascript" defer th:src="@{/fillUsersTable.js}"></script>
 
 <!--              EDIT SCRIPT                          -->
 <script type="text/javascript" src="../static/modalEdit.js" th:src="@{/modalEdit.js}"></script>
@@ -575,6 +542,8 @@
 <!--              DELETE SCRIPT                          -->
 <script type="text/javascript" src="../static/modalDelete.js" th:src="@{/modalDelete.js}"></script>
 
-<script type="text/javascript" defer th:src="@{/formValidation.js}"></script>
+<!--<script type="text/javascript" defer th:src="@{/formValidation.js}"></script>-->
+
+
 </body>
 </html>

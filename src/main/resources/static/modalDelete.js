@@ -1,20 +1,44 @@
-$('document').ready(function () {
-    $('.table .deleteButton').on('click', function (event) {
-        event.preventDefault();
 
-        let href = $(this).attr('href')
+async function showDeleteModal(userId){
 
-        $.get(href, function (userForDelete, status) {
+    const url = 'http://localhost:8080/admin/api/users/' + userId;
+    const response = await fetch(url);
+    const user = await response.json();
 
-            $(".deleteForm #deleteId").val(userForDelete.id);
-            $(".deleteForm #deleteFirstname").val(userForDelete.firstname);
-            $(".deleteForm #deleteAge").val(userForDelete.age);
-            $(".deleteForm #deleteEmail").val(userForDelete.email);
-            $(".deleteForm #deleteLastname").val(userForDelete.lastname);
+    $('#deleteUserModal').on('shown.bs.modal', function (event) {
 
-            $("#deleteUserModal #deleteModalButton").attr('href', '/admin/remove/' + userForDelete.id);
-        });
+        const modal = $(this)
 
-        $('#deleteUserModal').modal();
+        modal.find("#deleteId").val(user.id);
+        modal.find("#deleteFirstname").val(user.firstname);
+        modal.find("#deleteAge").val(user.age);
+        modal.find("#deleteEmail").val(user.email);
+        modal.find("#deleteLastname").val(user.lastname);
+        modal.find("#deleteRoles").val(user.roles[0].id).attr('selected', 'selected');
     });
+
+}
+
+$('#deleteModalButton').on('click', function(event) {
+
+    event.preventDefault();
+
+    let modal = $('#deleteUserModal')
+
+    const url = 'http://localhost:8080/admin/api/users/' + Number(modal.find("#deleteId").val());
+
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: () => {
+            loadIntoTable();
+            console.log("deleted");
+        },
+        error: (err) => {
+            alert(err);
+        }
+    })
+
+    modal.modal('hide');
+
 });
