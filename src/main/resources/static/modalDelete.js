@@ -1,5 +1,4 @@
-
-async function showDeleteModal(userId){
+async function showDeleteModal(userId) {
 
     const url = 'http://localhost:8080/admin/api/users/' + userId;
     const response = await fetch(url);
@@ -19,7 +18,7 @@ async function showDeleteModal(userId){
 
 }
 
-$('#deleteModalButton').on('click', function(event) {
+$('#deleteModalButton').on('click', function (event) {
 
     event.preventDefault();
 

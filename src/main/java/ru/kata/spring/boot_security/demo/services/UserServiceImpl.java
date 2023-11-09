@@ -4,15 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
+import ru.kata.spring.boot_security.demo.exceptions.NotFoundException;
 import ru.kata.spring.boot_security.demo.repositories.UserDao;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
+@Validated
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -28,12 +30,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void registerUser(User user) {
+    public User registerUser(User user) {
 
         if (user.getRoles().isEmpty()) {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
         }
-        save(user);
+        return save(user);
+    }
+
+    @Transactional
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+
+        return Optional.ofNullable(getUsers().stream()
+                .filter(user -> user.getUsername().equals(email))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден")));
+
     }
 
     @Transactional
@@ -45,27 +58,20 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public boolean userExists(User user) {
-        Optional<User> userCheck = userDao.findByEmail(user.getUsername());
-        return userCheck.isPresent();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public List<User> getUsers() {
         return userDao.findAll();
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userDao.findById(id).get();
+    public Optional<User> getUserById(Long id) {
+        return userDao.findById(id);
     }
 
     @Transactional
     @Override
-    public void updateUser(User user) {
+    public User updateUser(User user) {
 
-        save(user);
+        return save(user);
     }
 
     @Override

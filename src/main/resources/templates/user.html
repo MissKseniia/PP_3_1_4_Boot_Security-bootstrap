@@ -8,16 +8,16 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 </head>
-<body>
+<body onload="loadUserData()">
 
 <div class="container-fluid" style="background-color: black">
     <div class="container">
         <div class="row justify-content-md-between align-items-center">
             <div class="col-lg-auto" style="color: whitesmoke">
                 <div class="row align-items-center " th:object="${user}">
-                    <div class="col-lg-auto" style="font-weight: bold; padding-right: 0" th:text="${user.email}"></div>
+                    <div id="userEmailData" class="col-lg-auto" style="font-weight: bold; padding-right: 0"></div>
                     <div class="col-lg-auto" style="padding-right: 0">with roles:</div>
-                    <div class="col-lg-auto" style="padding-right: 0" th:text="${user.roles}"></div>
+                    <div id="userRolesData" class="col-lg-auto" style="padding-right: 0"></div>
                 </div>
             </div>
             <div class="col-lg-1">
@@ -54,7 +54,8 @@
                         <div class="container"
                              style="align-items: center; background-color: white; padding-top: 20px; padding-bottom: 20px">
 
-                            <table class="table table-striped" style="padding: 10px; border-top: lightgrey solid thin">
+                            <table id="userInfoTable" class="table table-striped"
+                                   style="padding: 10px; border-top: lightgrey solid thin">
                                 <thead>
                                 <tr>
                                     <th scope="col"> ID</th>
@@ -66,14 +67,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:object="${user}">
-                                    <td th:text="${user.id}"></td>
-                                    <td th:text="${user.firstname}"></td>
-                                    <td th:text="${user.lastname}"></td>
-                                    <td th:text="${user.age}"></td>
-                                    <td th:text="${user.email}"></td>
-                                    <td th:text="${user.roles}"></td>
-                                </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -94,5 +88,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+<!--              LOAD USER DATA SCRIPT                          -->
+<script type="text/javascript" defer th:src="@{/loadUserInfo.js}"></script>
 </body>
 </html>

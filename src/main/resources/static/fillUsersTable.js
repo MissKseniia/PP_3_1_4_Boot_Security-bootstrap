@@ -1,5 +1,3 @@
-
-
 async function loadIntoTable() {
 
     const url = 'http://localhost:8080/admin/api/users';
@@ -20,7 +18,7 @@ async function loadIntoTable() {
             allRoles += space;
         }
 
-        allRoles = allRoles.trimEnd().substring(0,allRoles.length-2);
+        allRoles = allRoles.trimEnd().substring(0, allRoles.length - 2);
 
         tab += `<tr> 
                     <td>${user.id}</td>

@@ -1,5 +1,3 @@
-
-
 async function loadUserData() {
 
     const url = 'http://localhost:8080/admin/api/users/current';
@@ -19,7 +17,7 @@ async function loadUserData() {
         allRoles += user.roles[i].role.substring(5, user.roles[i].role.length);
         allRoles += space;
     }
-    allRoles = allRoles.trimEnd().substring(0,allRoles.length-2);
+    allRoles = allRoles.trimEnd().substring(0, allRoles.length - 2);
 
     divEmail.innerHTML = email;
     divRoles.innerHTML = allRoles;
